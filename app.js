@@ -1,6 +1,11 @@
 import express from "express";
 import morgan from "morgan";
 import cors from "cors";
+import "dotenv/config";
+
+import "./db/sequelize.js";
+
+console.log(process.env.DATABASE_DIALECT);
 
 import contactsRouter from "./routes/contactsRouter.js";
 
