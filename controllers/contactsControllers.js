@@ -36,13 +36,13 @@ const createContact = async (req, res) => {
     res.status(201).json(result);
 };
 
-const updateStatusContact = async (req, res) => {
+const updateContact = async (req, res) => {
     if (Object.keys(req.body).length === 0) {
         throw HttpError(400, "Body must have at least one field");
     }
 
     const {contactId} = req.params;
-    const result = await contactsService.updateStatusContact(contactId, req.body);
+    const result = await contactsService.updateContact(contactId, req.body);
 
     if (!result) {
         throw HttpError(404);
@@ -56,5 +56,5 @@ export default {
     getContactById: controllerWrapper(getContactById),
     removeContact: controllerWrapper(removeContact),
     createContact: controllerWrapper(createContact),
-    updateStatusContact: controllerWrapper(updateStatusContact),
+    updateContact: controllerWrapper(updateContact),
 };
