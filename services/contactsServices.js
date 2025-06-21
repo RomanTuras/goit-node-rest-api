@@ -5,27 +5,29 @@ import Contact from "../db/Contact.js";
  *
  * @returns {Promise<Array|null>}
  */
-export const listContacts = () => Contact.findAll();
+export const listContacts =  (query) => Contact.findAll({
+    where: query,
+});
 
 
 
 /**
  * Getting contact by ID
  *
- * @param {string} contactId
+ * @param {Object} query
  * @returns {Promise<Object|null>}
  */
-export const getContactById = contactId => Contact.findByPk(contactId);
+export const getContactById = query => Contact.findOne(query);
 
 
 /**
  * Removing contact by ID
  *
- * @param {string} contactId
+ * @param {Object} query
  * @returns {Promise<Object|null>}
  */
-export const removeContact = async contactId => {
-    const contact = await getContactById(contactId);
+export const removeContact = async query => {
+    const contact = await getContactById(query);
     if (!contact) return null;
 
     await contact.destroy();
@@ -44,12 +46,12 @@ export const addContact = payload => Contact.create(payload);
 /**
  * Updating contact
  *
- * @param {string} contactId
+ * @param {Object} query
  * @param data
  * @returns {Promise<Object> || null}
  */
-export const updateContact = async (contactId, data) => {
-    const contact = await getContactById(contactId);
+export const updateContact = async (query, data) => {
+    const contact = await getContactById(query);
     if (!contact) return null;
 
     contact.update(data);
