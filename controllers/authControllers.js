@@ -1,9 +1,13 @@
 import * as authServices from "../services/authServices.js";
-
+import gravatar from "gravatar";
 import ctrlWrapper from "../helpers/controllerWrapper.js";
+import {rename} from "node:fs/promises";
+import {resolve, join} from "node:path";
+
+const avatarDir = resolve("public", "avatars");
 
 const registerController = async(req, res)=> {
-
+    req.body.avatarUrl = gravatar.url(req.body.email, {protocol: 'http', s: '100'});
     const newUser = await authServices.registerUser(req.body);
 
     res.status(201).json({
@@ -37,9 +41,26 @@ export const logoutController = async(req, res)=> {
     })
 }
 
+export const updateAvatarController = async(req, res)=> {
+    let avatar = null;
+    if (req.file) {
+        const {path: oldPath, filename} = req.file;
+        const newPath = join(avatarDir, filename);
+        await rename(oldPath, newPath);
+        avatar = join("avatars", filename);
+    }
+    const {email} = req.user;
+    await authServices.updateUser(email, {...req.body, avatarURL: avatar});
+
+    res.status(200).json({
+        "avatarURL": avatar,
+    })
+}
+
 export default {
     registerController: ctrlWrapper(registerController),
     loginController: ctrlWrapper(loginController),
     getCurrentController: ctrlWrapper(getCurrentController),
     logoutController: ctrlWrapper(logoutController),
+    updateAvatarController: ctrlWrapper(updateAvatarController),
 }

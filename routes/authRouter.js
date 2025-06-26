@@ -8,6 +8,8 @@ import { authRegisterSchema, authLoginSchema } from "../schemas/authSchemas.js";
 
 import authenticate from "../middlewares/authenticate.js";
 
+import upload from "../middlewares/upload.js";
+
 const authRouter = express.Router();
 
 authRouter.post(
@@ -20,6 +22,13 @@ authRouter.post(
     "/login",
     validateBody(authLoginSchema),
     authControllers.loginController
+);
+
+authRouter.patch(
+    "/avatars",
+    authenticate,
+    upload.single("avatar"),
+    authControllers.updateAvatarController
 );
 
 authRouter.get("/current", authenticate, authControllers.getCurrentController);
