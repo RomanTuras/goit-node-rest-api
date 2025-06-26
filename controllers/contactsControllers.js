@@ -1,17 +1,18 @@
 import * as contactsService from "../services/contactsServices.js";
-
 import HttpError from "../helpers/HttpError.js";
 import controllerWrapper from "../helpers/controllerWrapper.js";
 
 const listContacts = async (req, res) => {
-    const result = await contactsService.listContacts();
+    const {id} = req.user;
+    const result = await contactsService.listContacts({owner: id});
 
     res.json(result);
 };
 
 const getContactById = async (req, res) => {
-    const {id} = req.params;
-    const result = await contactsService.getContactById(id);
+    const {contactId} = req.params;
+    const {id} = req.user;
+    const result = await contactsService.getContactById({contactId: contactId, owner: id});
 
     if (!result) {
         throw HttpError(404);
@@ -21,8 +22,9 @@ const getContactById = async (req, res) => {
 };
 
 const removeContact = async (req, res) => {
-    const {id} = req.params;
-    const result = await contactsService.removeContact(id);
+    const {contactId} = req.params;
+    const {id} = req.user;
+    const result = await contactsService.removeContact({contactId: contactId, owner: id});
 
     if (!result) {
         throw HttpError(404);
@@ -32,7 +34,7 @@ const removeContact = async (req, res) => {
 };
 
 const createContact = async (req, res) => {
-    const result = await contactsService.addContact(req.body);
+    const result = await contactsService.addContact({...req.body, owner: req.user.id});
 
     res.status(201).json(result);
 };
@@ -43,7 +45,8 @@ const updateContact = async (req, res) => {
     }
 
     const {id} = req.params;
-    const result = await contactsService.updateContact(id, req.body);
+    const {owner} = req.user;
+    const result = await contactsService.updateContact({id, owner}, req.body);
 
     if (!result) {
         throw HttpError(404);
