@@ -14,6 +14,7 @@ const registerController = async(req, res)=> {
         "user": {
             email: newUser.email,
             subscription: newUser.subscription,
+            avatarUrl: newUser.avatarUrl,
         }
     })
 }
@@ -25,11 +26,12 @@ export const loginController = async(req, res)=> {
 }
 
 export const getCurrentController = async (req, res)=> {
-    const {email, subscription} = req.user;
+    const {email, subscription, avatarUrl} = req.user;
 
     res.json({
         email,
         subscription,
+        avatarUrl
     });
 }
 
