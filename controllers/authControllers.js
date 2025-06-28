@@ -52,10 +52,10 @@ export const updateAvatarController = async(req, res)=> {
         avatar = join("avatars", filename);
     }
     const {email} = req.user;
-    await authServices.updateUser(email, {...req.body, avatarURL: avatar});
+    await authServices.updateUser(email, {...req.body, avatarUrl: avatar});
 
     res.status(200).json({
-        "avatarURL": avatar,
+        "avatarUrl": avatar,
     })
 }
 
