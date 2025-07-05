@@ -11,3 +11,13 @@ export const authLoginSchema = Joi.object({
     email: Joi.string().pattern(emailRegexp).error(new Error('Помилка від Joi або іншої бібліотеки валідації')).required(),
     password: Joi.string().min(6).required(),
 });
+
+export const authEmailSchema = Joi.object({
+    email: Joi.string()
+        .pattern(emailRegexp)
+        .required()
+        .messages({
+            'any.required': 'missing required field email',
+            'string.pattern.base': 'Помилка від Joi або іншої бібліотеки валідації',
+        }),
+})

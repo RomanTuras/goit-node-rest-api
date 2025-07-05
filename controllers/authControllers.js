@@ -19,6 +19,23 @@ const registerController = async(req, res)=> {
     })
 }
 
+const verifyController = async(req, res)=> {
+    const {verificationToken} = req.params;
+    await authServices.verifyUser(verificationToken);
+
+    res.json({
+        message: "Verification successful"
+    })
+}
+
+const resendVerifyController = async(req, res)=> {
+    await authServices.resendVerifyUser(req.body.email);
+
+    res.json({
+        message: "Verification email sent"
+    })
+}
+
 export const loginController = async(req, res)=> {
     const user = await authServices.loginUser(req.body);
 
@@ -65,4 +82,6 @@ export default {
     getCurrentController: ctrlWrapper(getCurrentController),
     logoutController: ctrlWrapper(logoutController),
     updateAvatarController: ctrlWrapper(updateAvatarController),
+    verifyController: ctrlWrapper(verifyController),
+    resendVerifyController: ctrlWrapper(resendVerifyController),
 }
